@@ -22,19 +22,25 @@ jobs:
 
       - name: Merge Django Apps
         run: |
+          # Ensure you're in the EH directory and configure Git for it
+          cd EH
           git config --global user.name "n0tfyet"
           git config --global user.email "niamster366@gmail.com"
+
+          # Set the repository's remote URL for pushing changes
           git remote set-url origin https://github.com/${{ github.repository }}
           git config --global credential.helper store
           echo "https://github-actions:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
 
-
+          # Now proceed with merging apps
+          cd ..
           mkdir -p temp_merged_apps
           cp -r EH/app/* temp_merged_apps
           find temp_merged_apps -name "*.ipynb" -type f -delete  # Exclude notebooks
           cp -r temp_merged_apps/* IEC/app/
           cd IEC
 
+          # Check for changes and commit if necessary
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -m "Merged Django apps from EH to IEC"
