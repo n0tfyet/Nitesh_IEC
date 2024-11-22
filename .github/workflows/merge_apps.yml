@@ -6,6 +6,7 @@ on:
 jobs:
   merge-apps:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Checkout EH Repo
         uses: actions/checkout@v3
@@ -22,7 +23,11 @@ jobs:
       - name: Merge Django Apps
         run: |
           git config --global user.name "n0tfyet"
-          git config --global user.email "your_email@example.com"
+          git config --global user.email "niamster366@gmail.com"
+          git remote set-url origin https://github.com/${{ github.repository }}
+          git config --global credential.helper store
+          echo "https://github-actions:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
+
 
           mkdir -p temp_merged_apps
           cp -r EH/app/* temp_merged_apps
