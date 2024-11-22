@@ -1,0 +1,45 @@
+name: Merge Django Apps
+
+on:
+  workflow_dispatch:  # Allows manual triggering of the workflow from GitHub Actions UI
+
+jobs:
+  merge-apps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout EH Repo
+        uses: actions/checkout@v3
+        with:
+          repository: n0tfyet/Nitesh_EH
+          path: EH
+
+      - name: Checkout IEC Repo
+        uses: actions/checkout@v3
+        with:
+          repository: n0tfyet/Nitesh_IEC
+          path: IEC
+
+      - name: Merge Django Apps
+        run: |
+          mkdir -p temp_merged_apps
+          cp -r EH/app/* temp_merged_apps
+          find temp_merged_apps -name "*.ipynb" -type f -delete  # Exclude notebooks
+          cp -r temp_merged_apps/* IEC/app/
+          cd IEC
+          git add .
+          git commit -m "Merged Django apps from EH to IEC"
+          git push origin main
+
+      - name: Update General Files
+        run: |
+          cd IEC
+          git remote add EH_remote https://github.com/n0tfyet/Nitesh_EH.git
+          git fetch EH_remote main
+          git checkout -b temp-merge EH_remote/main
+          cp settings.py urls.py ../IEC/
+          git checkout main
+          git add settings.py urls.py
+          git commit -m "Synced general Django files from EH"
+          git push origin main
+          git branch -D temp-merge
+          git remote remove EH_remote
