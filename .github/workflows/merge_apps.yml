@@ -61,6 +61,7 @@ jobs:
           cd IEC
           git remote add EH_remote https://github.com/n0tfyet/Nitesh_EH.git
           git fetch EH_remote main
+          git clean -fd
           git checkout -b temp-merge EH_remote/main
 
           # Copy settings.py and urls.py from temp_merged_apps/app to IEC/app/app
