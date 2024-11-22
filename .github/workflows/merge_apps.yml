@@ -21,9 +21,9 @@ jobs:
 
       - name: Merge Django Apps
         run: |
-          git config --global.user.name "n0tfyet"
-          git config --global.email "niamster366@gmail.com"
-          
+          git config --global user.name "n0tfyet"
+          git config --global email "niamster366@gmail.com"
+
           mkdir -p temp_merged_apps
           cp -r EH/app/* temp_merged_apps
           find temp_merged_apps -name "*.ipynb" -type f -delete  # Exclude notebooks
