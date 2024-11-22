@@ -22,16 +22,28 @@ jobs:
       - name: Merge Django Apps
         run: |
           git config --global user.name "n0tfyet"
-          git config --global user.email "niamster366@gmail.com"
+          git config --global user.email "your_email@example.com"
 
           mkdir -p temp_merged_apps
           cp -r EH/app/* temp_merged_apps
           find temp_merged_apps -name "*.ipynb" -type f -delete  # Exclude notebooks
           cp -r temp_merged_apps/* IEC/app/
           cd IEC
-          git add .
-          git commit -m "Merged Django apps from EH to IEC"
-          git push origin main
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Merged Django apps from EH to IEC"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
+          
+      - name: Debug File Copy
+        run: |
+          echo "Files in temp_merged_apps:"
+          ls -R temp_merged_apps
+          echo "Files in IEC/app:"
+          ls -R IEC/app/
 
       - name: Update General Files
         run: |
