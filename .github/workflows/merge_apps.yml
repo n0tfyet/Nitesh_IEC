@@ -51,11 +51,30 @@ jobs:
           git remote add EH_remote https://github.com/n0tfyet/Nitesh_EH.git
           git fetch EH_remote main
           git checkout -b temp-merge EH_remote/main
-          cp EH/app/settings.py IEC/app
-          cp EH/app/urls.py IEC/app
+
+          # Copy settings.py and urls.py from temp_merged_apps/app to IEC/app/app
+          if [ -f "../temp_merged_apps/app/settings.py" ]; then
+            cp ../temp_merged_apps/app/settings.py app/
+          else
+            echo "settings.py not found in temp_merged_apps."
+          fi
+
+          if [ -f "../temp_merged_apps/app/urls.py" ]; then
+            cp ../temp_merged_apps/app/urls.py app/
+          else
+            echo "urls.py not found in temp_merged_apps."
+          fi
+
+          # Commit and push changes if there are any
           git checkout main
-          git add settings.py urls.py
-          git commit -m "Synced general Django files from EH"
-          git push origin main
+          if [ -n "$(git status --porcelain)" ]; then
+            git add app/settings.py app/urls.py
+            git commit -m "Synced general Django files from EH"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
+
+          # Clean up
           git branch -D temp-merge
           git remote remove EH_remote
