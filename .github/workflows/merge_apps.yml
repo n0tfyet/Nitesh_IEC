@@ -51,7 +51,8 @@ jobs:
           git remote add EH_remote https://github.com/n0tfyet/Nitesh_EH.git
           git fetch EH_remote main
           git checkout -b temp-merge EH_remote/main
-          cp settings.py urls.py ../IEC/
+          cp EH/app/app/settings.py IEC/app/app
+          cp EH/app/app/urls.py IEC/app/app
           git checkout main
           git add settings.py urls.py
           git commit -m "Synced general Django files from EH"
